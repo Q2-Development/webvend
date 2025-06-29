@@ -1,0 +1,5 @@
+fastapi[standard]
+supabase
+openai
+requests
+cryptography
