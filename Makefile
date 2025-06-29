@@ -1,6 +1,7 @@
 #!make
-include ./backend/supabase.env
+include ./backend/.env
 
+# Main backend
 up:
 	docker-compose up -d
 
@@ -11,6 +12,8 @@ rebuild:
 	docker-compose down --volumes --remove-orphans
 	docker-compose up --build
 
+
+# Edge Function testing
 supabase-init:
 	cd backend && npm i supabase --save-dev && npx supabase start
 
