@@ -1,40 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# WebVend Frontend
+
+A Next.js frontend for the Project Web-Vend AI vending machine simulation.
+
+## Features
+
+- **Simulation Dashboard**: Real-time view of AI agent behavior and inventory management
+- **Financial Tracking**: Monitor cash balance, inventory value, and profit margins
+- **Transaction Logging**: Real-time transaction history with sales and purchases
+- **Model Selection**: Switch between different AI models to compare strategies
+- **Inventory Display**: Visual representation of current stock levels, pricing, and margins
+- **Activity Logging**: Track AI agent decisions and customer interactions
+- **Responsive Design**: Works on desktop and mobile devices
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Create a `.env.local` file in the frontend directory:
+   ```bash
+   # Backend API URL
+   BACKEND_URL=http://localhost:8000
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Pages
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- `/` - Overview page explaining the Project Vend experiment
+- `/dashboard` - Main simulation dashboard with real-time data
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API Integration
 
-## Learn More
+The frontend communicates with the backend through proxy API routes:
 
-To learn more about Next.js, take a look at the following resources:
+- `/api/vending/inventory` - Fetches current inventory data with vendor costs and retail prices
+- `/api/vending/balance` - Retrieves current cash balance
+- `/api/vending/transactions` - Gets transaction history
+- `/api/models` - Retrieves available AI models
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## New Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Financial Dashboard
+- **Cash Balance**: Real-time tracking of available funds
+- **Inventory Value**: Total retail value of current stock
+- **Total Cost**: Total vendor cost of current inventory
+- **Gross Profit**: Calculated profit margin
 
-## Deploy on Vercel
+### Enhanced Inventory Display
+- **Dual Pricing**: Shows both vendor cost and retail price
+- **Margin Calculation**: Displays profit margin per item
+- **Stock Indicators**: Visual stock level indicators
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Transaction Logging
+- **Real-time Updates**: Live transaction feed
+- **Transaction Types**: Distinguishes between sales and purchases
+- **Timestamps**: Accurate transaction timing
+- **Visual Indicators**: Color-coded transaction types
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## Styling
+
+The application uses CSS modules with a consistent design system based on CSS custom properties. The styling follows the existing StartPage patterns and supports both light and dark themes.
+
+## Development
+
+- Built with Next.js 15 and React 19
+- TypeScript for type safety
+- CSS Modules for component styling
+- Responsive design with mobile-first approach
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).

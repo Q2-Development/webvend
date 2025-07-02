@@ -1,0 +1,540 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+.dashboard {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  min-height: 100vh;
+  background-color: var(--startpage-bg);
+  color: var(--startpage-text);
+}
+
+.header {
+  background-color: var(--startpage-border);
+  border-bottom: 1px solid var(--startpage-border);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerContent {
+  flex: 1;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: var(--startpage-title);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--startpage-subtitle);
+  margin: 0 0 0.5rem 0;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.statusDot.active {
+  background-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.statusDot.inactive {
+  background-color: #6b7280;
+}
+
+.statusText {
+  font-weight: 600;
+  color: var(--startpage-text);
+}
+
+.lastUpdate {
+  color: var(--startpage-subtitle);
+  font-size: 0.8rem;
+}
+
+.refreshButton {
+  background: none;
+  border: 1px solid var(--startpage-border);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--startpage-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: inherit;
+}
+
+.refreshButton:hover:not(:disabled) {
+  background-color: var(--startpage-code-bg);
+}
+
+.refreshButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.navLink {
+  color: var(--startpage-link);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.navLink:hover {
+  background-color: var(--startpage-code-bg);
+  text-decoration: none;
+}
+
+.mainContent {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section {
+  background-color: var(--startpage-code-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--startpage-border);
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--startpage-section-title);
+  margin: 0 0 1rem 0;
+}
+
+.modelSelector {
+  margin-bottom: 1rem;
+}
+
+.modelSelect {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--startpage-border);
+  border-radius: 8px;
+  background-color: var(--startpage-bg);
+  color: var(--startpage-text);
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.modelSelect:focus {
+  outline: none;
+  border-color: var(--startpage-link);
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+}
+
+.modelSelect:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.warningText {
+  font-size: 0.8rem;
+  color: #f59e0b;
+  margin: 0.5rem 0 0 0;
+  font-weight: 500;
+}
+
+.statusCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.statusItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--startpage-border);
+}
+
+.statusItem:last-child {
+  border-bottom: none;
+}
+
+.statusLabel {
+  font-size: 0.9rem;
+  color: var(--startpage-subtitle);
+  font-weight: 500;
+}
+
+.statusValue {
+  font-size: 0.9rem;
+  color: var(--startpage-text);
+  font-weight: 600;
+}
+
+.activeText {
+  color: #10b981;
+}
+
+.inactiveText {
+  color: #6b7280;
+}
+
+.positiveBalance {
+  color: #10b981;
+}
+
+.negativeBalance {
+  color: #ef4444;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.controlButton {
+  padding: 0.75rem 1rem;
+  background-color: var(--startpage-button-bg);
+  color: var(--startpage-button-text);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  font-family: inherit;
+}
+
+.controlButton:hover:not(.disabled) {
+  background-color: var(--startpage-button-hover);
+  transform: translateY(-1px);
+}
+
+.controlButton.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.mainArea {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.inventorySection {
+  background-color: var(--startpage-code-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--startpage-border);
+}
+
+.inventoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.inventoryCard {
+  background-color: var(--startpage-bg);
+  border: 1px solid var(--startpage-border);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inventoryCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.itemName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--startpage-text);
+  margin: 0;
+  flex: 1;
+}
+
+.priceInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.retailPrice {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--startpage-link);
+}
+
+.vendorCost {
+  font-size: 0.8rem;
+  color: var(--startpage-subtitle);
+  font-weight: 500;
+}
+
+.itemDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.stockLevel {
+  font-size: 0.9rem;
+  color: var(--startpage-subtitle);
+  font-weight: 500;
+}
+
+.marginInfo {
+  font-size: 0.8rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.stockIndicator {
+  width: 100%;
+  height: 6px;
+  background-color: var(--startpage-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.stockBar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.highStock {
+  background-color: #10b981;
+}
+
+.mediumStock {
+  background-color: #f59e0b;
+}
+
+.lowStock {
+  background-color: #ef4444;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--startpage-subtitle);
+}
+
+.emptyState p {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.emptySubtext {
+  font-size: 0.9rem !important;
+  opacity: 0.7;
+}
+
+.activitySection {
+  background-color: var(--startpage-code-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--startpage-border);
+}
+
+.activityLog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background-color: var(--startpage-bg);
+  border-radius: 6px;
+  border: 1px solid var(--startpage-border);
+}
+
+.activityTime {
+  font-size: 0.8rem;
+  color: var(--startpage-subtitle);
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.activityText {
+  font-size: 0.9rem;
+  color: var(--startpage-text);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.transactionType {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.transactionType.sale {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.transactionType.purchase {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--startpage-border);
+  border-top: 3px solid var(--startpage-link);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  text-align: center;
+}
+
+.errorContainer h2 {
+  color: var(--startpage-link);
+  margin: 0;
+}
+
+.errorContainer p {
+  color: var(--startpage-subtitle);
+  margin: 0;
+}
+
+.retryButton {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--startpage-button-bg);
+  color: var(--startpage-button-text);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: inherit;
+}
+
+.retryButton:hover {
+  background-color: var(--startpage-button-hover);
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .mainContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .sidebar {
+    order: 2;
+  }
+
+  .mainArea {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .statusIndicator {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .inventoryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .activityItem {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .activityTime {
+    min-width: auto;
+  }
+
+  .transactionType {
+    align-self: flex-end;
+  }
+} 

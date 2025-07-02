@@ -1,7 +1,14 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import styles from './StartPage.module.css';
 
 export const StartPage = () => {
+    const router = useRouter();
+
+    const handleNavigateToDashboard = () => {
+        router.push('/dashboard');
+    };
+
     return (
         <main className={styles.startPage}>
             <div className={styles.content}>
@@ -35,7 +42,7 @@ export const StartPage = () => {
 
                 <button 
                     className={styles.ctaButton} 
-                    onClick={() => alert("This would navigate to the simulation dashboard!")}
+                    onClick={handleNavigateToDashboard}
                 >
                     View the Simulation Dashboard
                 </button>

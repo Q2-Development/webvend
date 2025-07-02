@@ -12,8 +12,6 @@ logger = logging.getLogger(__name__)
 
 # Send chat
 def send_chat_prompt(user: gotrue.types.User, messages: APIResponse):
-    logger.info(f"Prompt: {item.prompt}")
-    
     api_key = None
     if not user.is_anonymous:
         try:
