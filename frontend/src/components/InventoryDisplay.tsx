@@ -23,7 +23,11 @@ export default function InventoryDisplay({ inventory }: Props) {
           className="border p-4 rounded shadow-sm flex flex-col"
         >
           <span className="font-bold">{item.product_name}</span>
-          <span>${item.price.toFixed(2)}</span>
+          <span>
+            {item.price !== undefined && item.price !== null
+              ? `$${Number(item.price || 0).toFixed(2)}`
+              : 'Price N/A'}
+          </span>
           <span>Qty: {item.quantity_in_stock}</span>
         </div>
       ))}

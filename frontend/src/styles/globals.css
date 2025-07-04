@@ -1,12 +1,42 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* StartPage specific colors - light theme */
+  --startpage-bg: #ffffff;
+  --startpage-text: #171717;
+  --startpage-title: #171717;
+  --startpage-link: #dc2626;
+  --startpage-subtitle: #666666;
+  --startpage-border: #e5e5e5;
+  --startpage-section-title: #333333;
+  --startpage-paragraph: #444444;
+  --startpage-code-bg: #f0f0f0;
+  --startpage-code-text: #171717;
+  --startpage-button-bg: #252525;
+  --startpage-button-text: #ffffff;
+  --startpage-button-hover: #000000;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #141413;
+    --foreground: #ffffff;
+    
+    /* StartPage specific colors - dark theme */
+    --startpage-bg: #141413;
+    --startpage-text: #ffffff;
+    --startpage-title: #ffffff;
+    --startpage-link: #ff6b6b;
+    --startpage-subtitle: #b0b0b0;
+    --startpage-border: #333333;
+    --startpage-section-title: #e0e0e0;
+    --startpage-paragraph: #cccccc;
+    --startpage-code-bg: #2a2a2a;
+    --startpage-code-text: #f0f0f0;
+    --startpage-button-bg: #4a4a4a;
+    --startpage-button-text: #ffffff;
+    --startpage-button-hover: #666666;
   }
 }
 

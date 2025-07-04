@@ -1,0 +1,220 @@
+.dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgb(17, 24, 39) 0%, rgb(30, 58, 138) 50%, rgb(17, 24, 39) 100%);
+  color: white;
+}
+
+.header {
+  border-bottom: 1px solid rgb(55, 65, 81);
+  background: rgba(17, 24, 39, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.headerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerTitle {
+  font-size: 24px;
+  font-weight: bold;
+  background: linear-gradient(to right, rgb(96, 165, 250), rgb(168, 85, 247));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.headerSubtitle {
+  color: rgb(156, 163, 175);
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.simulationControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.simulationStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.statusDotRunning {
+  background: rgb(34, 197, 94);
+  animation: pulse 2s infinite;
+}
+
+.statusDotStopped {
+  background: rgb(239, 68, 68);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.statusText {
+  font-size: 14px;
+  color: rgb(209, 213, 219);
+}
+
+.controlButton {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.startButton {
+  background: rgb(34, 197, 94);
+  color: white;
+}
+
+.startButton:hover {
+  background: rgb(22, 163, 74);
+}
+
+.stopButton {
+  background: rgb(239, 68, 68);
+  color: white;
+}
+
+.stopButton:hover {
+  background: rgb(220, 38, 38);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.sectionSpacing {
+  margin-bottom: 32px;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.inventoryGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.inventorySection {
+  background: rgba(31, 41, 55, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid rgb(55, 65, 81);
+  padding: 24px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+}
+
+.titleIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.blueIndicator {
+  background: rgb(96, 165, 250);
+}
+
+.purpleIndicator {
+  background: rgb(168, 85, 247);
+}
+
+.eventLogSection {
+  background: rgba(31, 41, 55, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid rgb(55, 65, 81);
+  padding: 24px;
+}
+
+.loadingContainer {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: rgb(17, 24, 39);
+}
+
+.loadingText {
+  color: white;
+  font-size: 20px;
+}
+
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .inventoryGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerContent {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .simulationControls {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .container {
+    padding: 16px;
+  }
+  
+  .mainGrid {
+    gap: 12px;
+  }
+  
+  .inventoryGrid {
+    gap: 12px;
+  }
+} 
