@@ -4,19 +4,43 @@
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-console.log("Hello from Functions!")
-
+// Autonomous agent function: consumes events from pgmq queue and logs outcome
 Deno.serve(async (req) => {
-  const { name } = await req.json()
-  const data = {
-    message: `Hello ${name}!`,
-  }
+  try {
+    const payload = await req.json()
+    const record: any = payload.record ?? {}
 
-  return new Response(
-    JSON.stringify(data),
-    { headers: { "Content-Type": "application/json" } },
-  )
+    // The event may be stored in the "message" column or directly in record
+    const rawEvent = record.message ?? record
+    let event
+    try {
+      event = typeof rawEvent === "string" ? JSON.parse(rawEvent) : rawEvent
+    } catch (_e) {
+      event = { type: "unknown", payload: rawEvent }
+    }
+
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    )
+
+    // TODO: Replace with real LLM reasoning and state mutation
+    const aiResponse = { message: "acknowledged" }
+
+    // Persist log for dashboard
+    await supabaseAdmin.from("event_logs").insert({
+      event_type: event.type ?? "unknown",
+      payload: event.payload ?? {},
+      ai_response: aiResponse,
+    })
+
+    return new Response("OK")
+  } catch (error) {
+    console.error("Edge function error", error)
+    return new Response(JSON.stringify({ error: "internal" }), { status: 500 })
+  }
 })
 
 /* To invoke locally:

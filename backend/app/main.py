@@ -58,35 +58,30 @@ def get_inventory():
 @app.post("/api/vending/purchase")
 def customer_purchase(purchase: PurchaseRequest):
     try:
-        # Validate the purchase request
-        item = supabase.table("inventory").select("*") \
-            .eq("product_name", purchase.item) \
-            .single() \
-            .execute().data
+        event = {
+            "type": "human.purchase.requested",
+            "payload": {
+                "item_name": purchase.item
+            }
+        }
 
-        # Check if the item exists and is in stock
-        if not item:
-            raise HTTPException(status_code=404, detail="Item not found")
-        
-        if item['quantity_in_stock'] <= 0:
-            raise HTTPException(status_code=400, detail="Item out of stock")
-        
-        # Check if the user has enough balance
-        pass
+        # Send event to pgmq queue via RPC wrapper
+        supabase.rpc(
+            "pgmq_send",
+            {
+                "queue_name": "agent_events",
+                "messages": [event]
+            }
+        ).execute()
 
-        # Updating the quantity
-        # PostgreSQL trigger will generate log entry
-        supabase.table("inventory").update({
-            "quantity_in_stock": item['quantity_in_stock'] - 1
-        }).eq("product_name", purchase.item).execute()
-
-            
-        return {"message": "Purchase successful", "item": purchase.item}
+        return {"message": "Purchase request queued for processing."}
 
     except Exception as e:
-        logger.error(f"Error in /api/vending/purchase endpoint for vending purchase : {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
-        # return {"error": str(e)}
+        logger.error(
+            f"Error queueing purchase event in /api/vending/purchase: {e}",
+            exc_info=True
+        )
+        raise HTTPException(status_code=500, detail="Failed to queue purchase request.")
 
 
 
