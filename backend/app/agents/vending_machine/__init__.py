@@ -2,8 +2,13 @@ from app.database.supabase_client import supabase
 from app.agents.prompts import get_vendor_prompt
 from app.agents.vending_machine.parser import parse_llm_response
 from app.agents.vendor_data import VENDOR_CATALOG
+from dotenv import load_dotenv
+from pathlib import Path
 import requests
 import os
+
+load_dotenv(Path(__file__).parent.parent / ".env")
+OPENROUTER_API_KEY = os.getenv('OPEN_ROUTER_KEY')
 
 def get_inventory():
     """Fetches the current inventory from the database."""
@@ -72,18 +77,18 @@ def process_business_request():
         response = requests.post(
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
-                "Authorization": f"Bearer {os.getenv('OPEN_ROUTER_KEY')}",
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
             },
             json={
-                "model": "anthropic/claude-3-haiku-20240307",
+                "model": "google/gemini-2.5-flash-lite-preview-06-17",
                 "messages": [{"role": "user", "content": prompt}],
             },
         )
         response.raise_for_status()
         llm_response_text = response.json()["choices"][0]["message"]["content"]
+        print(f"The response from OpenRouter: {response}")
     except requests.exceptions.RequestException as e:
         print(f"Error calling OpenRouter: {e}")
-        # Return a default action or re-raise as a different exception
         return {
             "prompt": prompt,
             "response": "Error: Could not get response from LLM.",

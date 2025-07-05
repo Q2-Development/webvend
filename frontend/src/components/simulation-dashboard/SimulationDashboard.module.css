@@ -538,4 +538,361 @@
   .transactionType {
     align-self: flex-end;
   }
+}
+
+/* AI Logs Section - Enhanced Design */
+.aiLogsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--startpage-border);
+}
+
+.aiLogsStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.aiLogsContainer {
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: var(--startpage-bg);
+  border-radius: 12px;
+  border: 1px solid var(--startpage-border);
+}
+
+.aiLogsContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.aiLogsContainer::-webkit-scrollbar-track {
+  background: var(--startpage-code-bg);
+  border-radius: 4px;
+}
+
+.aiLogsContainer::-webkit-scrollbar-thumb {
+  background: var(--startpage-border);
+  border-radius: 4px;
+}
+
+.aiLogsContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--startpage-subtitle);
+}
+
+.aiLogsTimeline {
+  position: relative;
+}
+
+.aiLogEntry {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.aiLogEntry.latest {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.aiLogTimeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.aiLogStep {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--startpage-link);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.aiLogEntry.latest .aiLogStep {
+  background: linear-gradient(135deg, var(--startpage-link), #f97316);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.4);
+  }
+}
+
+.stepNumber {
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.timelineConnector {
+  width: 3px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--startpage-link), var(--startpage-border));
+  margin-top: 0.5rem;
+}
+
+.aiLogContent {
+  flex: 1;
+  background: var(--startpage-code-bg);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid var(--startpage-border);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.aiLogContent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--startpage-link);
+}
+
+.aiLogContent::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid var(--startpage-code-bg);
+}
+
+.aiLogHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--startpage-border);
+}
+
+.aiLogTime {
+  font-size: 0.85rem;
+  color: var(--startpage-subtitle);
+  font-weight: 600;
+  background: var(--startpage-bg);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--startpage-border);
+}
+
+.aiLogAgent {
+  font-size: 0.9rem;
+  color: var(--startpage-text);
+  font-weight: 600;
+}
+
+.aiLogDecision {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+}
+
+.aiLogDecision.success {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.aiLogDecision.warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.aiLogDecision.neutral {
+  background: rgba(107, 114, 128, 0.1);
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.decisionIcon {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.decisionText {
+  flex: 1;
+  font-size: 1rem;
+  color: var(--startpage-text);
+  line-height: 1.5;
+}
+
+.aiLogDetails {
+  margin-top: 1rem;
+}
+
+.aiLogSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: var(--startpage-link);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  background: var(--startpage-bg);
+  border-radius: 8px;
+  border: 1px solid var(--startpage-border);
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.aiLogSummary:hover {
+  background: var(--startpage-code-bg);
+  transform: translateY(-1px);
+}
+
+.expandIcon {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.aiLogDetails[open] .expandIcon {
+  transform: rotate(180deg);
+}
+
+.aiLogReasoning {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--startpage-bg);
+  border-radius: 8px;
+  border: 1px solid var(--startpage-border);
+}
+
+.reasoningSection {
+  margin-bottom: 1.5rem;
+}
+
+.reasoningSection:last-child {
+  margin-bottom: 0;
+}
+
+.reasoningSection h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: var(--startpage-section-title);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.promptText, .responseText {
+  background: var(--startpage-text);
+  color: var(--startpage-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  margin: 0;
+  overflow-x: auto;
+}
+
+.promptText {
+  border-left: 4px solid #3b82f6;
+}
+
+.responseText {
+  border-left: 4px solid #10b981;
+}
+
+.aiLogsEmpty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--startpage-subtitle);
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.aiLogsEmpty p {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--startpage-text);
+}
+
+.aiLogsEmpty small {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Responsive Design for AI Logs */
+@media (max-width: 768px) {
+  .aiLogsHeader {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .aiLogEntry {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .aiLogTimeline {
+    flex-direction: row;
+    justify-content: center;
+    min-width: auto;
+  }
+
+  .timelineConnector {
+    display: none;
+  }
+
+  .aiLogContent::before {
+    display: none;
+  }
+
+  .aiLogDecision {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .aiLogHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
 } 

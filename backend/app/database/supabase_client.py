@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 
 dotenv.load_dotenv(Path(__file__).parent.parent / ".env")
+print(f"")
 supabase: Client = create_client(
     os.environ["SUPABASE_URL"],
     os.environ["SUPABASE_ANON_KEY"]

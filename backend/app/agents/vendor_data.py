@@ -10,3 +10,6 @@ VENDOR_CATALOG = {
     "Energy Drink": {"cost": 1.50, "wholesale_price": 1.50},
     "Gum": {"cost": 0.25, "wholesale_price": 0.25},
 } 
+
+
+# Make this pull from the inventory instead

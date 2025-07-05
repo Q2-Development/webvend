@@ -58,48 +58,132 @@ export const RealTimeUpdates: React.FC<RealTimeUpdatesProps> = ({ simulationId, 
     }
   }, [logs]);
 
+  const getActionIcon = (action: any) => {
+    if (!action || !action.action) return '🤔';
+    switch(action.action) {
+      case 'BUY':
+        return '🛒';
+      case 'UPDATE_PRICE':
+        return '💰';
+      case 'DO_NOTHING':
+        return '⏸️';
+      default:
+        return '❓';
+    }
+  };
+
+  const getActionColor = (action: any) => {
+    if (!action || !action.action) return 'neutral';
+    switch(action.action) {
+      case 'BUY':
+        return 'success';
+      case 'UPDATE_PRICE':
+        return 'warning';
+      case 'DO_NOTHING':
+        return 'neutral';
+      default:
+        return 'neutral';
+    }
+  };
 
   const formatAction = (action: any) => {
     if (!action || !action.action) return 'No action taken.';
     switch(action.action) {
       case 'BUY':
-        return `Decided to BUY ${action.quantity} of ${action.item_name}.`;
+        return `Buy ${action.quantity} units of ${action.item_name}`;
       case 'UPDATE_PRICE':
-        return `Decided to UPDATE price of ${action.item_name} to $${action.price.toFixed(2)}.`;
+        return `Update ${action.item_name} price to $${action.price.toFixed(2)}`;
       case 'DO_NOTHING':
-        return 'Decided to do nothing and observe sales.';
+        return 'Wait and observe market conditions';
       default:
-        return 'Unknown action.';
+        return 'Unknown action';
     }
-  }
+  };
+
+  const formatTime = (timestamp: string) => {
+    return new Date(timestamp).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  };
+
+  const getStepStatus = (stepNumber: number) => {
+    const isLatest = stepNumber === Math.max(...logs.map(log => log.step_number));
+    return isLatest ? 'latest' : 'completed';
+  };
 
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}>AI Thought Process (Live)</h2>
-      <div className={`${styles.logsContainer} ${styles.card}`} ref={logContainerRef}>
+      <div className={styles.aiLogsHeader}>
+        <h2 className={styles.sectionTitle}>
+          🧠 AI Decision Process
+        </h2>
+        <div className={styles.aiLogsStatus}>
+          <div className={`${styles.statusDot} ${isActive ? styles.active : styles.inactive}`}></div>
+          <span className={styles.statusText}>
+            {isActive ? 'Live Updates' : 'Paused'}
+          </span>
+        </div>
+      </div>
+      
+      <div className={styles.aiLogsContainer} ref={logContainerRef}>
         {logs.length > 0 ? (
-          logs.map(log => (
-            <div key={log.id} className={styles.logEntry}>
-              <div className={styles.logHeader}>
-                <strong>Step {log.step_number}</strong> - <span>{new Date(log.created_at).toLocaleTimeString()}</span>
+          <div className={styles.aiLogsTimeline}>
+            {logs.map((log, index) => (
+              <div key={log.id} className={`${styles.aiLogEntry} ${styles[getStepStatus(log.step_number)]}`}>
+                <div className={styles.aiLogTimeline}>
+                  <div className={styles.aiLogStep}>
+                    <span className={styles.stepNumber}>{log.step_number}</span>
+                  </div>
+                  {index < logs.length - 1 && <div className={styles.timelineConnector}></div>}
+                </div>
+                
+                <div className={styles.aiLogContent}>
+                  <div className={styles.aiLogHeader}>
+                    <div className={styles.aiLogTime}>
+                      {formatTime(log.created_at)}
+                    </div>
+                    <div className={styles.aiLogAgent}>
+                      🤖 {log.agent_name}
+                    </div>
+                  </div>
+                  
+                  <div className={`${styles.aiLogDecision} ${styles[getActionColor(log.parsed_action)]}`}>
+                    <div className={styles.decisionIcon}>
+                      {getActionIcon(log.parsed_action)}
+                    </div>
+                    <div className={styles.decisionText}>
+                      <strong>Decision:</strong> {formatAction(log.parsed_action)}
+                    </div>
+                  </div>
+                  
+                  <details className={styles.aiLogDetails}>
+                    <summary className={styles.aiLogSummary}>
+                      <span>🔍 View AI Reasoning</span>
+                      <span className={styles.expandIcon}>▼</span>
+                    </summary>
+                    <div className={styles.aiLogReasoning}>
+                      <div className={styles.reasoningSection}>
+                        <h4>💭 Prompt Given to AI</h4>
+                        <pre className={styles.promptText}>{log.prompt}</pre>
+                      </div>
+                      <div className={styles.reasoningSection}>
+                        <h4>🎯 AI's Response</h4>
+                        <pre className={styles.responseText}>{log.response}</pre>
+                      </div>
+                    </div>
+                  </details>
+                </div>
               </div>
-              <div className={styles.logContent}>
-                <p><strong>Decision:</strong> {formatAction(log.parsed_action)}</p>
-                <details>
-                  <summary>View AI's reasoning</summary>
-                  <pre className={styles.promptResponse}>
-                    <strong>--- PROMPT ---</strong><br/>
-                    {log.prompt}
-                    <br/><br/>
-                    <strong>--- RESPONSE ---</strong><br/>
-                    {log.response}
-                  </pre>
-                </details>
-              </div>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
-          <p>Waiting for simulation to start...</p>
+          <div className={styles.aiLogsEmpty}>
+            <div className={styles.emptyIcon}>🤖</div>
+            <p>Waiting for AI to start making decisions...</p>
+            <small>Start a simulation to see the AI's thought process</small>
+          </div>
         )}
       </div>
     </div>
