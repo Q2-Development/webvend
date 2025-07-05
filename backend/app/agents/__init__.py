@@ -1,3 +1,3 @@
 from .functions import send_chat_prompt
-from .prompts import VENDOR_PROMPT, MACHINE_PROMPT
-__all__ = ['VENDOR_PROMPT', 'MACHINE_PROMPT', 'send_chat_prompt']
+from .prompts import get_vendor_prompt
+__all__ = ['get_vendor_prompt','send_chat_prompt']

@@ -1,57 +1,113 @@
 from fastapi import FastAPI, HTTPException
-
-from app.models import PurchaseRequest
-from app.database import supabase
-import requests
-import dotenv
-import os
+from fastapi.middleware.cors import CORSMiddleware
+from app.agents.vending_machine import process_business_request
+from app.agents.customer import simulate_customer_purchases
+from app.database.supabase_client import supabase
+from app import PurchaseRequest, supabase
 import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-DEBUG = True
 
 app = FastAPI()
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
 
-dotenv.load_dotenv()
+# Add CORS middleware to allow all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.post("/api/simulation/start")
+def start_simulation():
+    """Starts a new simulation, creating a record in the database."""
+    try:
+        response = supabase.table("simulations").insert({
+            "status": "running",
+            "llm_model": "claude-3-haiku-20240307" # Or get from request
+        }).execute()
+        simulation_id = response.data[0]['id']
+        return {"simulation_id": simulation_id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/models")
-def get_models():
-    headers = {
-        "Authorization": f'Bearer {os.getenv("OPEN_ROUTER_KEY")}',  # Changed to use OPEN_ROUTER_KEY
-        "Content-Type": "application/json"
-    }
-    r = requests.get("https://openrouter.ai/api/v1/models", headers=headers)
-    if r.status_code >= 200 and r.status_code <= 299:
-        return r.json()  
-    else:
-        return {"error": "Failed to retrieve models"}
+@app.post("/api/simulation/step")
+def simulation_step(simulation_id: str, step_number: int):
+    """Runs one step of the simulation."""
+    try:
+        # Vending machine agent's turn
+        vending_machine_turn = process_business_request()
+        supabase.table("simulation_logs").insert({
+            "simulation_id": simulation_id,
+            "step_number": step_number,
+            "agent_name": "VendingMachine",
+            "prompt": vending_machine_turn["prompt"],
+            "response": vending_machine_turn["response"],
+            "parsed_action": vending_machine_turn["parsed_action"],
+        }).execute()
 
-# Endpoint to fetch the inventory from Supabase for frontend display
+        # Customer agent's turn
+        customer_purchases = simulate_customer_purchases()
+
+        return {
+            "vending_machine_action": vending_machine_turn["parsed_action"],
+            "customer_purchases": customer_purchases
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/simulation/logs/{simulation_id}")
+def get_simulation_logs(simulation_id: str):
+    """Fetches all logs for a given simulation."""
+    try:
+        response = supabase.table("simulation_logs").select("*").eq("simulation_id", simulation_id).order("step_number").execute()
+        return response.data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/simulation/reset")
+def reset_simulation():
+    """Resets the simulation state in the database."""
+    try:
+        # This is a placeholder. A proper reset would involve more complex logic,
+        # perhaps calling a database function to reset tables to a default state.
+        # For now, we can clear the logs and reset the cash balance.
+        supabase.table("transaction_logs").delete().neq("id", 0).execute() # Deletes all rows
+        supabase.table("simulation_logs").delete().neq("id", 0).execute()
+        supabase.table("cash_balance").update({"balance": 1000.00}).eq("account_name", "vending_machine").execute()
+        # You might also want to reset inventory quantities.
+        return {"message": "Simulation reset successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/api/vending/inventory")
 def get_inventory():
     try:
-        # Fetch inventory from Supabase
         inventory = supabase.table("inventory").select("*").execute().data
-        
         if not inventory:
             raise HTTPException(status_code=404, detail="No items found in inventory")
-        
         return {"inventory": inventory}
-    
     except Exception as e:
-        logger.error(f"Error in /api/vending/inventory endpoint: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/vending/balance")
+def get_balance():
+    try:
+        balance = supabase.table("cash_balance").select("balance").eq("account_name", "vending_machine").execute().data
+        if not balance:
+            raise HTTPException(status_code=404, detail="Balance not found")
+        return {"balance": balance[0]['balance']}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/vending/transactions")
+def get_transactions():
+    try:
+        transactions = supabase.table("transaction_logs").select("*").order("created_at", desc=True).limit(100).execute().data
+        return {"transactions": transactions}
+    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 # Endpoint to handle the purchase request, assuming users are allowed to

@@ -9,7 +9,7 @@ export default async function handler(
   }
 
   try {
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
     const response = await fetch(`${backendUrl}/api/models`);
     
     if (!response.ok) {
