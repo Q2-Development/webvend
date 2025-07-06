@@ -46,9 +46,20 @@ def execute_action(action: dict):
         supabase.table("cash_balance").update({"balance": current_balance - total_cost}).eq("account_name", "vending_machine").execute()
 
         # 3. Update inventory
-        current_inventory_response = supabase.table("inventory").select("quantity_in_stock").eq("product_name", item_name).execute()
+        quoted_item_name = f'"{item_name}"'
+        current_inventory_response = (
+            supabase.table("inventory")
+            .select("quantity_in_stock")
+            .eq("product_name", quoted_item_name)
+            .execute()
+        )
         current_quantity = current_inventory_response.data[0]['quantity_in_stock']
-        supabase.table("inventory").update({"quantity_in_stock": current_quantity + quantity}).eq("product_name", item_name).execute()
+        (
+            supabase.table("inventory")
+            .update({"quantity_in_stock": current_quantity + quantity})
+            .eq("product_name", quoted_item_name)
+            .execute()
+        )
 
         # 4. Add transaction log
         supabase.table("transaction_logs").insert({
@@ -61,7 +72,13 @@ def execute_action(action: dict):
         # Logic to handle UPDATE_PRICE action
         item_name = action.get("item_name")
         new_price = action.get("price")
-        supabase.table("inventory").update({"retail_price": new_price}).eq("product_name", item_name).execute()
+        quoted_item_name = f'"{item_name}"'
+        (
+            supabase.table("inventory")
+            .update({"retail_price": new_price})
+            .eq("product_name", quoted_item_name)
+            .execute()
+        )
 
 def process_business_request():
     # 1. Gather state

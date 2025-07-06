@@ -10,7 +10,13 @@ def get_inventory():
 
 def update_inventory_quantity(product_name, new_quantity):
     """Updates the quantity of a product in the inventory."""
-    supabase.table("inventory").update({"quantity_in_stock": new_quantity}).eq("product_name", product_name).execute()
+    quoted_item_name = f'"{product_name}"'
+    (
+        supabase.table("inventory")
+        .update({"quantity_in_stock": new_quantity})
+        .eq("product_name", quoted_item_name)
+        .execute()
+    )
 
 def add_transaction_log(product_name, price, agent_name):
     """Adds a new transaction to the transaction_logs table."""
