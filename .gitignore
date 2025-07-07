@@ -45,3 +45,5 @@ backend/*/__pycache__
 *.npmrc
 .vscode/settings.json
 backend/supabase.env
+backend/.vscode/extensions.json
+backend/.vscode/settings.json
