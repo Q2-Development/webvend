@@ -61,7 +61,7 @@ def execute_action(action: dict):
         # Logic to handle UPDATE_PRICE action
         item_name = action.get("item_name")
         new_price = action.get("price")
-        quoted_item_name = f'"{item_name}"'
+        quoted_item_name = f'{item_name}'
         (
             supabase.table("inventory")
             .update({"retail_price": new_price})
