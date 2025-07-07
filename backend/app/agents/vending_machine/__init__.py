@@ -42,7 +42,7 @@ def execute_action(action: dict):
         total_cost = vendor_cost * quantity
 
         # 2. Update inventory (DB trigger will adjust cash balance & log transaction)
-        quoted_item_name = f'"{item_name}"'
+        quoted_item_name = f'{item_name}'
         current_inventory_response = (
             supabase.table("inventory")
             .select("quantity_in_stock")
