@@ -46,8 +46,9 @@ def simulate_customer_purchases():
             if item['quantity_in_stock'] > 0:
                 new_quantity = item['quantity_in_stock'] - 1
                 update_inventory_quantity(item['product_name'], new_quantity)
-                update_cash_balance(item['retail_price'])
-                add_transaction_log(item['product_name'], item['retail_price'], "Customer")
+                # Cash balance adjustment and transaction logging are handled
+                # automatically by the `quantity_in_stock_change_trigger` in the
+                # database when we update the inventory.
                 purchases.append({
                     "product_name": item['product_name'],
                     "price": item['retail_price']

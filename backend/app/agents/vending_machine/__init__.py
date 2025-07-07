@@ -41,11 +41,7 @@ def execute_action(action: dict):
             
         total_cost = vendor_cost * quantity
 
-        # 2. Update cash balance
-        current_balance = get_cash_balance()
-        supabase.table("cash_balance").update({"balance": current_balance - total_cost}).eq("account_name", "vending_machine").execute()
-
-        # 3. Update inventory
+        # 2. Update inventory (DB trigger will adjust cash balance & log transaction)
         quoted_item_name = f'"{item_name}"'
         current_inventory_response = (
             supabase.table("inventory")
@@ -60,13 +56,6 @@ def execute_action(action: dict):
             .eq("product_name", quoted_item_name)
             .execute()
         )
-
-        # 4. Add transaction log
-        supabase.table("transaction_logs").insert({
-            "product": item_name,
-            "price": total_cost,
-            "agent_name": "VendingMachine"
-        }).execute()
 
     elif action_type == "UPDATE_PRICE":
         # Logic to handle UPDATE_PRICE action

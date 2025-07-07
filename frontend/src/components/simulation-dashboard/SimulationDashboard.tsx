@@ -35,6 +35,7 @@ export const SimulationDashboard = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [cashBalance, setCashBalance] = useState<CashBalance | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   
   const stepIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -298,6 +299,66 @@ export const SimulationDashboard = () => {
         </div>
 
         <div className={styles.primaryContent}>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Inventory</h2>
+            <div className={styles.inventorySearchWrapper}>
+              <input
+                type="text"
+                placeholder="Search items…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles.inventorySearch}
+              />
+            </div>
+            {inventory.length > 0 ? (
+              <div className={styles.inventoryScroller}>
+                {inventory
+                  .filter((item) =>
+                    item.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .map((item) => {
+                    const barClass =
+                      item.quantity_in_stock === 0
+                        ? styles.lowStock
+                        : item.quantity_in_stock < 5
+                        ? styles.mediumStock
+                        : styles.highStock;
+                    const barWidth = Math.min(item.quantity_in_stock * 10, 100); // assumes full stock ~10 units
+
+                    const profitMargin = item.retail_price - item.vendor_cost;
+                    const priceClass = 
+                      profitMargin > 0 
+                        ? styles.profitPrice 
+                        : profitMargin === 0 
+                        ? styles.breakEvenPrice 
+                        : styles.lossPrice;
+
+                    return (
+                      <div key={item.product_name} className={styles.inventoryCard}>
+                        <div className={styles.itemHeader}>
+                          <h3 className={styles.itemName}>{item.product_name}</h3>
+                          <div className={styles.priceInfo}>
+                            <span className={`${styles.retailPrice} ${priceClass}`}>${item.retail_price.toFixed(2)}</span>
+                            <span className={styles.vendorCost}>Cost: ${item.vendor_cost.toFixed(2)}</span>
+                          </div>
+                        </div>
+                        <div className={styles.itemDetails}>
+                          <span className={styles.stockLevel}>Qty: {item.quantity_in_stock}</span>
+                        </div>
+                        <div className={styles.stockIndicator}>
+                          <div
+                            className={`${styles.stockBar} ${barClass}`}
+                            style={{ width: `${barWidth}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            ) : (
+              <p>No inventory data.</p>
+            )}
+          </div>
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Live Transaction Log</h2>
             <div className={`${styles.transactions} ${styles.card}`}>
