@@ -17,7 +17,7 @@ export default function Dashboard() {
     <>
       <Head>
         <title>Project Web-Vend - Simulation Dashboard</title>
-        <meta name="description" content="AI vending machine simulation dashboard" />
+        <meta name="description" content="Project Web-Vend - Simulation Dashboard" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

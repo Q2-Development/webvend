@@ -24,6 +24,9 @@ interface Transaction {
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
+const stepIntervalSeconds = parseFloat(process.env.NEXT_PUBLIC_SIMULATION_STEP_INTERVAL_SECONDS || '3');
+const SIMULATION_STEP_INTERVAL_MS = isNaN(stepIntervalSeconds) ? 3000 : stepIntervalSeconds * 1000;
+
 export const SimulationDashboard = () => {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -93,7 +96,7 @@ export const SimulationDashboard = () => {
   
   useEffect(() => {
     if (simulationActive && simulationId) {
-      stepIntervalRef.current = setInterval(runSimulationStep, 3000); // Run every 3 seconds
+      stepIntervalRef.current = setInterval(runSimulationStep, SIMULATION_STEP_INTERVAL_MS);
     } else {
       if (stepIntervalRef.current) {
         clearInterval(stepIntervalRef.current);
@@ -220,7 +223,7 @@ export const SimulationDashboard = () => {
     <div className={styles.dashboard}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <h1 className={styles.title}>AI Vending Machine Simulation</h1>
+          <h1 className={styles.title}>Project Web-Vend</h1>
           <p className={styles.subtitle}>Observing autonomous AI strategy in action</p>
           <div className={styles.statusIndicator}>
             <span className={`${styles.statusDot} ${simulationActive ? styles.active : styles.inactive}`}></span>

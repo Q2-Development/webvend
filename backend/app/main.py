@@ -35,7 +35,6 @@ def start_simulation():
 
 @app.post("/api/simulation/step")
 def simulation_step(simulation_id: str, step_number: int):
-    """Runs one step of the simulation."""
     try:
         # Vending machine agent's turn
         vending_machine_turn = process_business_request()
