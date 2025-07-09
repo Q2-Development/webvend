@@ -164,12 +164,17 @@ export const SimulationDashboard = () => {
   };
 
   const getTransactionDescription = (transaction: Transaction) => {
-    if (transaction.agent_name === 'Customer') {
-      return `Sold ${transaction.product} for $${transaction.price.toFixed(2)}`;
-    } else if (transaction.agent_name === 'VendingMachine') {
+    switch (transaction.action) {
+      case 'sold_to_customer':
+        return `Sold ${transaction.product} for $${transaction.price.toFixed(2)}`;
+      case 'bought_from_vendor':
         return `Bought ${transaction.product} for $${transaction.price.toFixed(2)}`;
+      case 'price_change':
+        return `Price for ${transaction.product} updated to $${transaction.price.toFixed(2)}`;
+      default:
+        // Fallback for any other actions
+        return `Transaction: ${transaction.product} for $${transaction.price.toFixed(2)}`;
     }
-    return `Transaction: ${transaction.product} for $${transaction.price.toFixed(2)}`;
   };
 
   const calculateTotalValue = () => {
@@ -361,17 +366,41 @@ export const SimulationDashboard = () => {
           </div>
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Live Transaction Log</h2>
-            <div className={`${styles.transactions} ${styles.card}`}>
+            <div className={styles.transactionLog}>
               {transactions.length > 0 ? (
-                <ul>
-                  {transactions.map((t) => (
-                    <li key={t.id} className={styles.transactionItem}>
-                      <span className={styles.transactionTime}>{formatTransactionTime(t.created_at)}</span>
-                      <span className={styles.transactionDesc}>{getTransactionDescription(t)}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : <p>No transactions yet.</p>}
+                transactions.map((t) => {
+                  const isSale = t.action === 'sold_to_customer';
+                  const isPurchase = t.action === 'bought_from_vendor';
+                  
+                  let itemClass = styles.transactionItem;
+                  let icon = '🔄';
+
+                  if (isSale) {
+                    itemClass += ` ${styles.sale}`;
+                    icon = '💲';
+                  } else if (isPurchase) {
+                    itemClass += ` ${styles.purchase}`;
+                    icon = '🛒';
+                  }
+
+                  return (
+                    <div key={t.id} className={itemClass}>
+                      <div className={styles.transactionIcon}>
+                        {icon}
+                      </div>
+                      <div className={styles.transactionContent}>
+                        <span className={styles.transactionText}>{getTransactionDescription(t)}</span>
+                        <span className={styles.transactionTime}>{formatTransactionTime(t.created_at)}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className={styles.emptyState}>
+                  <p>No transactions yet.</p>
+                  <small className={styles.emptySubtext}>Transactions will appear here as they happen.</small>
+                </div>
+              )}
             </div>
           </div>
           
