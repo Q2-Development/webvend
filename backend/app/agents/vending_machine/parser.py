@@ -29,4 +29,12 @@ def parse_llm_response(response: str) -> dict:
             "price": float(update_match.group(2)),
         }
 
+    discount_match = re.search(r"Action: OFFER_DISCOUNT, Item: '([^']*)', Discount: (\d+)%", response, re.IGNORECASE)
+    if discount_match:
+        return {
+            "action": "OFFER_DISCOUNT",
+            "item_name": discount_match.group(1),
+            "discount": int(discount_match.group(2)),
+        }
+
     return {"action": "UNKNOWN", "details": "Could not parse response"} 

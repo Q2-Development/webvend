@@ -2,6 +2,7 @@ from app.database.supabase_client import supabase
 from app.agents.prompts import get_vendor_prompt
 from app.agents.vending_machine.parser import parse_llm_response
 from app.agents.vendor_data import VENDOR_CATALOG
+from app.agents.conversation import get_recent_messages, add_message
 from dotenv import load_dotenv
 from pathlib import Path
 import requests
@@ -69,14 +70,28 @@ def execute_action(action: dict):
             .execute()
         )
 
-def process_business_request():
+    elif action_type == "OFFER_DISCOUNT":
+        item_name = action.get("item_name")
+        discount_pct = action.get("discount")
+
+        try:
+            supabase.table("discounts").upsert({
+                "product_name": item_name,
+                "discount_pct": discount_pct,
+            }).execute()
+        except Exception as e:
+            print(f"[vending_agent] Failed to record discount: {e}")
+
+# Accept simulation_id so we can include conversation and log reply
+def process_business_request(simulation_id: str):
     # 1. Gather state
     inventory = get_inventory()
     cash_balance = get_cash_balance()
     transaction_logs = get_transaction_logs()
+    customer_messages = get_recent_messages(simulation_id)
 
     # 2. Generate prompt
-    prompt = get_vendor_prompt(cash_balance, inventory, transaction_logs)
+    prompt = get_vendor_prompt(cash_balance, inventory, transaction_logs, customer_messages)
 
     # 3. Get LLM response via OpenRouter
     try:
@@ -103,6 +118,9 @@ def process_business_request():
 
     # 4. Parse action
     parsed_action = parse_llm_response(llm_response_text)
+
+    # Save the assistant's reply into conversation history
+    add_message(simulation_id, "VendingMachine", llm_response_text)
 
     # 5. Execute action
     execute_action(parsed_action)

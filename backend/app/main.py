@@ -1,9 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+# Orchestrate two-agent interaction
 from app.agents.vending_machine import process_business_request
-from app.agents.customer import simulate_customer_purchases
+from app.agents.customer import simulate_customer_purchases, generate_customer_request
 from app.database.supabase_client import supabase
-from app import PurchaseRequest, supabase
+from app.models import PurchaseRequest
 import logging
 
 logger = logging.getLogger(__name__)
@@ -33,11 +34,26 @@ def start_simulation():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/api/simulation/step")
 def simulation_step(simulation_id: str, step_number: int):
     try:
-        # Vending machine agent's turn
-        vending_machine_turn = process_business_request()
+        # 1. Customer LLM agent generates a request
+        customer_msg = generate_customer_request(simulation_id)
+
+        # Log customer message into simulation_logs
+        supabase.table("simulation_logs").insert({
+            "simulation_id": simulation_id,
+            "step_number": step_number,
+            "agent_name": "Customer",
+            "prompt": "N/A",
+            "response": customer_msg,
+            "parsed_action": None,
+        }).execute()
+
+        # 2. Vending machine agent processes request & decides action
+        vending_machine_turn = process_business_request(simulation_id)
+
         supabase.table("simulation_logs").insert({
             "simulation_id": simulation_id,
             "step_number": step_number,
@@ -47,12 +63,13 @@ def simulation_step(simulation_id: str, step_number: int):
             "parsed_action": vending_machine_turn["parsed_action"],
         }).execute()
 
-        # Customer agent's turn
+        # 3. Simulated customer random purchases still happen (optional)
         customer_purchases = simulate_customer_purchases()
 
         return {
+            "customer_request": customer_msg,
             "vending_machine_action": vending_machine_turn["parsed_action"],
-            "customer_purchases": customer_purchases
+            "customer_purchases": customer_purchases,
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
