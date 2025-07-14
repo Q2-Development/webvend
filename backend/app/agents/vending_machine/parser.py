@@ -29,7 +29,8 @@ def parse_llm_response(response: str) -> dict:
             "price": float(update_match.group(2)),
         }
 
-    discount_match = re.search(r"Action: OFFER_DISCOUNT, Item: '([^']*)', Discount: (\d+)%", response, re.IGNORECASE)
+    # Offer discount: allow optional spaces before percent symbol
+    discount_match = re.search(r"Action:\s*OFFER_DISCOUNT,\s*Item:\s*'([^']*)',\s*Discount:\s*(\d+)\s*%", response, re.IGNORECASE)
     if discount_match:
         return {
             "action": "OFFER_DISCOUNT",

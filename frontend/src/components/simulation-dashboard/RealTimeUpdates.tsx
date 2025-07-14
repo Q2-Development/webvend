@@ -65,6 +65,8 @@ export const RealTimeUpdates: React.FC<RealTimeUpdatesProps> = ({ simulationId, 
         return '🛒';
       case 'UPDATE_PRICE':
         return '💰';
+      case 'OFFER_DISCOUNT':
+        return '🏷️';
       case 'DO_NOTHING':
         return '⏸️';
       default:
@@ -79,6 +81,8 @@ export const RealTimeUpdates: React.FC<RealTimeUpdatesProps> = ({ simulationId, 
         return 'success';
       case 'UPDATE_PRICE':
         return 'warning';
+      case 'OFFER_DISCOUNT':
+        return 'info';
       case 'DO_NOTHING':
         return 'neutral';
       default:
@@ -93,6 +97,8 @@ export const RealTimeUpdates: React.FC<RealTimeUpdatesProps> = ({ simulationId, 
         return `Buy ${action.quantity} units of ${action.item_name}`;
       case 'UPDATE_PRICE':
         return `Update ${action.item_name} price to $${action.price.toFixed(2)}`;
+      case 'OFFER_DISCOUNT':
+        return `Offer ${action.discount}% discount on ${action.item_name}`;
       case 'DO_NOTHING':
         return 'Wait and observe market conditions';
       default:
@@ -131,7 +137,12 @@ export const RealTimeUpdates: React.FC<RealTimeUpdatesProps> = ({ simulationId, 
         {logs.length > 0 ? (
           <div className={styles.aiLogsTimeline}>
             {logs.map((log, index) => (
-              <div key={log.id} className={`${styles.aiLogEntry} ${styles[getStepStatus(log.step_number)]}`}>
+              <div 
+                key={log.id}
+                className={
+                  `${styles.aiLogEntry} ${styles[getStepStatus(log.step_number)]} ${log.agent_name === 'Customer' ? styles.customerEntry : ''}`
+                }
+              >
                 <div className={styles.aiLogTimeline}>
                   <div className={styles.aiLogStep}>
                     <span className={styles.stepNumber}>{log.step_number}</span>
@@ -149,14 +160,21 @@ export const RealTimeUpdates: React.FC<RealTimeUpdatesProps> = ({ simulationId, 
                     </div>
                   </div>
                   
-                  <div className={`${styles.aiLogDecision} ${styles[getActionColor(log.parsed_action)]}`}>
-                    <div className={styles.decisionIcon}>
-                      {getActionIcon(log.parsed_action)}
+                  {log.agent_name === 'Customer' ? (
+                    <div className={`${styles.aiLogDecision} ${styles.customer}`}> 
+                      <div className={styles.decisionIcon}>💬</div>
+                      <div className={styles.decisionText}>{log.response}</div>
                     </div>
-                    <div className={styles.decisionText}>
-                      <strong>Decision:</strong> {formatAction(log.parsed_action)}
+                  ) : (
+                    <div className={`${styles.aiLogDecision} ${styles[getActionColor(log.parsed_action)]}`}> 
+                      <div className={styles.decisionIcon}>
+                        {getActionIcon(log.parsed_action)}
+                      </div>
+                      <div className={styles.decisionText}>
+                        <strong>Decision:</strong> {formatAction(log.parsed_action)}
+                      </div>
                     </div>
-                  </div>
+                  )}
                   
                   <details className={styles.aiLogDetails}>
                     <summary className={styles.aiLogSummary}>

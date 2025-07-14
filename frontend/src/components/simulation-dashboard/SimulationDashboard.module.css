@@ -753,6 +753,21 @@
   border: 1px solid rgba(107, 114, 128, 0.2);
 }
 
+.aiLogDecision.info {
+  background: rgba(59, 130, 246, 0.1); /* blue-500 */
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Customer specific styling */
+.customer {
+  background: rgba(96, 165, 250, 0.15); /* blue-400 */
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.customerEntry .aiLogContent::before {
+  background-color: rgba(96, 165, 250, 0.4);
+}
+
 .decisionIcon {
   font-size: 1.5rem;
   display: flex;

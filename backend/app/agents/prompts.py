@@ -35,7 +35,7 @@ def get_vendor_prompt(
     ]) or "No recent customer messages."
 
     prompt = f"""
-        You are the AI operator of a vending machine. Your goal is to maximize profit.
+        You are the AI operator of a vending machine in an office with 3,000 people. Your goal is to maximize profit.
         You have a cash balance of ${cash_balance:.2f}.
 
         **Current Vending Machine Inventory:**
